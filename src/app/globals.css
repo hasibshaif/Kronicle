@@ -3,19 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --font-geist-sans: "Geist VF", sans-serif;
+  --font-geist-mono: "Geist Mono VF", monospace;
+  --font-funnel-display: "Funnel Display", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Dark theme colors */
+  --background-color: #141414; /* Dark background color in HEX */
+  --foreground-color: #ffffff; /* White text color */
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-funnel-display);
+  background-color: var(--background-color); /* Use direct color variable */
+  color: var(--foreground-color); /* Use direct color variable */
+}
+
+@keyframes bg-position {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-bg-position {
+  animation: bg-position 5s infinite alternate;
 }
