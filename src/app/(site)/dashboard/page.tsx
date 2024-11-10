@@ -1,5 +1,12 @@
+import DashboardTabs from "@/components/DashboardTabs";
+
 export default function DashboardPage() {
-    return (
-        <div>dashboard</div>
-    );
+  return (
+    <div>
+      <DashboardTabs />
+      <div className="mt-8">
+        booked events list...
+      </div>
+    </div>
+  );
 }

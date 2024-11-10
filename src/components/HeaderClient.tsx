@@ -18,7 +18,7 @@ export default function HeaderClient({ email }: HeaderClientProps) {
   const handleLogout = async () => {
     await fetch("/api/logout");
     setIsLoggedOut(true);
-    router.refresh(); // Refresh the page to re-fetch header props
+    router.refresh();
   };
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function HeaderClient({ email }: HeaderClientProps) {
 
   return (
     <>
-      <nav className="hidden lg:flex gap-4">
+      <nav className="hidden lg:flex gap-4 text-md">
         <Link href="/features" className="text-yellow-500 hover:text-yellow-400">Features</Link>
         <Link href="/about" className="text-yellow-500 hover:text-yellow-400">About</Link>
         <Link href="/pricing" className="text-yellow-500 hover:text-yellow-400">Pricing</Link>
