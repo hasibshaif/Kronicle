@@ -132,10 +132,6 @@ export default function EventTypeForm() {
         {/* Right Column - Availability by Day */}
         <div className="flex flex-col gap-3">
           {weekDaysNames.map((day) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const from = bookingTimes?.[day]?.from;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const to = bookingTimes?.[day]?.to;
             const active = bookingTimes?.[day].active;
             return (
               <div 
