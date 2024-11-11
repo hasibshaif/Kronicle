@@ -1,17 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { model, models, Schema } from "mongoose";
+import { WeekdayName, FromTo, BookingTimes } from "@/lib/types";
 
 const FromToSchema = new Schema({
     from: String,
     to: String,
 })
-
-type FromTo = {
-    from: string;
-    to: string;
-}
-
-type WeekdayName = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 const BookingSchema = new Schema<Record<WeekdayName, FromTo>>({
     monday: FromToSchema,
@@ -38,7 +32,7 @@ type EventType = {
     title: string;
     description: string;
     length: number;
-    bookingTimes: Record<WeekdayName, FromTo>;
+    bookingTimes: BookingTimes;
 }
 
 export const EventTypeModel = models?.EventType || model<EventType>('EventType', EventTypeSchema);

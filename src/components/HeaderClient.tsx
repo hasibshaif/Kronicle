@@ -43,7 +43,7 @@ export default function HeaderClient({ email }: HeaderClientProps) {
           </>
         ) : (
           <>
-            <Link href="/dashboard" className="bg-orange-600 text-white rounded-full py-2 px-4 hover:bg-red-600">
+            <Link href="/dashboard" className="button-gradient">
               Dashboard
             </Link>
             <button onClick={handleLogout} className="text-yellow-300 hover:text-yellow-400">
@@ -78,7 +78,7 @@ export default function HeaderClient({ email }: HeaderClientProps) {
               </>
             ) : (
               <>
-                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="bg-orange-600 text-white rounded-full py-2 px-4 hover:bg-red-600">
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full py-2 px-4 hover:text-yellow-400">
                   Dashboard
                 </Link>
                 <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="text-yellow-300 hover:text-yellow-400">
