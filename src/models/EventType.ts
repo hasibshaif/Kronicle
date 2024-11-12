@@ -1,23 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { model, models, Schema } from "mongoose";
+import { Document, Model, model, models, Schema } from "mongoose";
 import { WeekdayName, FromTo, BookingTimes } from "@/lib/types";
 
 const FromToSchema = new Schema({
     from: String,
     to: String,
+    active: Boolean,
 })
 
 const BookingSchema = new Schema<Record<WeekdayName, FromTo>>({
-    monday: FromToSchema,
-    tuesday: FromToSchema,
-    wednesday: FromToSchema,
-    thursday: FromToSchema,
-    friday: FromToSchema,
-    saturday: FromToSchema,
-    sunday: FromToSchema,
+    Monday: FromToSchema,
+    Tuesday: FromToSchema,
+    Wednesday: FromToSchema,
+    Thursday: FromToSchema,
+    Friday: FromToSchema,
+    Saturday: FromToSchema,
+    Sunday: FromToSchema,
 })
 
-const EventTypeSchema = new Schema<EventType>({
+const EventTypeSchema = new Schema<IEventType>({
     email: String,
     title: String,
     description: String,
@@ -27,12 +28,14 @@ const EventTypeSchema = new Schema<EventType>({
     timestamps: true,
 });
 
-type EventType = {
+export interface IEventType extends Document {
     email: string;
     title: string;
     description: string;
     length: number;
     bookingTimes: BookingTimes;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export const EventTypeModel = models?.EventType || model<EventType>('EventType', EventTypeSchema);
+export const EventTypeModel = models?.EventType as Model<IEventType> || model<IEventType>('EventType', EventTypeSchema);

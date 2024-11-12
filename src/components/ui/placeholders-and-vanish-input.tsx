@@ -1,16 +1,17 @@
-// PlaceholdersAndVanishInput.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function PlaceholdersAndVanishInput({
+  value,
   placeholders,
   onChange,
   className,
   as = "input",
   rows = 1,
 }: {
+  value: string;
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   className?: string;
@@ -30,12 +31,10 @@ export function PlaceholdersAndVanishInput({
 
   return (
     <Component
+      value={value}
       onChange={onChange}
       placeholder={placeholders[currentPlaceholder]}
-      className={cn(
-        "transition duration-200",
-        className
-      )}
+      className={cn("transition duration-200", className)}
       rows={as === "textarea" ? rows : undefined}
     />
   );
