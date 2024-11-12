@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { EventTypeModel } from "@/models/EventType";
 import mongoose from "mongoose";
 import { session } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 
 export async function handler(req: NextApiRequest, res: NextApiResponse) {
   const mongoUri = process.env.MONGODB_URI;
@@ -19,29 +20,37 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function POST(req: NextRequest) {
-  const mongoUri = process.env.MONGODB_URI;
-  if (!mongoUri) {
-    throw new Error("MONGODB_URI environment variable is not defined.");
-  }
-  await mongoose.connect(mongoUri);
-
+  await mongoose.connect(process.env.MONGODB_URI as string);
   const data = await req.json();
-
-  // Await the result of session().get('email') to ensure it is a string and not a Promise
   const email = await session().get('email');
-
-  if (!email) {
-    return new Response("User email not found in session.", { status: 401 });
+  if (email) {
+    const eventTypeDoc = await EventTypeModel.create({email, ...data});
+    revalidatePath('/dashboard/event-types', 'layout');
+    return Response.json(eventTypeDoc);
   }
+  return Response.json(false);
+}
 
-  try {
-    const eventTypeDoc = await EventTypeModel.create({ email, ...data });
-    return new Response(JSON.stringify(eventTypeDoc), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Error creating event type:", error);
-    return new Response("Internal Server Error", { status: 500 });
+export async function PUT(req: NextRequest) {
+  await mongoose.connect(process.env.MONGODB_URI as string);
+  const data = await req.json();
+  const email = await session().get('email');
+  const id = data.id;
+  if (email && id) {
+    const eventTypeDoc = await EventTypeModel.updateOne(
+      {email, _id: id},
+      data,
+    );
+    revalidatePath('/dashboard/event-types', 'layout');
+    return Response.json(eventTypeDoc);
   }
+  return Response.json(false);
+}
+
+export async function DELETE(req: NextRequest) {
+  const url = new URL(req.url);
+  const id = url.searchParams.get('id');
+  await mongoose.connect(process.env.MONGODB_URI as string);
+  await EventTypeModel.deleteOne({_id: id})
+  return Response.json(true);
 }

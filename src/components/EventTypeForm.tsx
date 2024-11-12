@@ -9,6 +9,8 @@ import clsx from "clsx";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { IEventType } from "@/models/EventType";
+import { Check, Trash2 } from "lucide-react";
+import EventTypeDelete from "./EventTypeDelete";
 
 const titlePlaceholders = [
   "Monday Mojo Mixer", "Project Power Hour", "Sprint to Win",
@@ -57,12 +59,15 @@ export default function EventTypeForm({doc}: {doc?:IEventType}) {
 
   async function handleSubmit(event:FormEvent) {
     event.preventDefault();
-    const request = doc?._id ? axios.put : axios.post;
-    const response = await request('/api/event-types', {
+    const id = doc?._id;
+    const request = id ? axios.put : axios.post;
+    const data = {
       title, description, length, bookingTimes
-    });
+    };
+    const response = await request('/api/event-types', {...data, id});
     if (response.data) {
       router.push('/dashboard/event-types');
+      router.refresh();
     }
   }
 
@@ -157,8 +162,12 @@ export default function EventTypeForm({doc}: {doc?:IEventType}) {
         </div>
 
         {/* Save Button */}
-        <div className="col-span-2 flex justify-center mt-4">
-          <button type="submit" className="button-gradient">
+        <div className="col-span-2 flex justify-center gap-4 mt-4">
+          {doc && (
+            <EventTypeDelete id={doc._id as string} />
+          )}
+          <button type="submit" className="button-gradient flex items-center gap-2">
+            <Check size={16} />
             SAVE EVENT
           </button>
         </div>

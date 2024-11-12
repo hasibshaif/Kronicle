@@ -159,3 +159,18 @@ label {
   color: rgb(255, 255, 155);
   transform: translateY(-2px); /* slight lift on hover */
 }
+
+.button-delete {
+  padding: 0.5rem 1.5rem; /* equivalent to px-6 py-2 */
+  border-radius: 1rem; /* equivalent to rounded-xl */
+  background: linear-gradient(to right, #f22727, #be1f06); /* from-red-500 to-orange-500 */
+  color: #ffffff; /* equivalent to text-white */
+  font-weight: 600; /* equivalent to font-semibold */
+  text-align: center;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.button-gradient:hover {
+  color: rgb(255, 255, 155);
+  transform: translateY(-2px); /* slight lift on hover */
+}
