@@ -20,6 +20,7 @@ const BookingSchema = new Schema<Record<WeekdayName, FromTo>>({
 
 const EventTypeSchema = new Schema<IEventType>({
     email: String,
+    uri: {type: String},
     title: String,
     description: String,
     length: Number,
@@ -30,6 +31,7 @@ const EventTypeSchema = new Schema<IEventType>({
 
 export interface IEventType extends Document {
     email: string;
+    uri: string;
     title: string;
     description: string;
     length: number;

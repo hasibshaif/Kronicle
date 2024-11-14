@@ -1,3 +1,4 @@
+// animata/container/nav-tabs.tsx
 "use client";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
@@ -31,8 +32,16 @@ export default function NavTabs({ tabs }: { tabs: { text: string; href: string }
 
 // Function to determine if the current path matches or starts with the tab's href
 function isActiveTab(href: string, pathname: string) {
-  // Keep "Event Types" tab highlighted on all "/dashboard/event-types/*" routes
+  // Highlight "Event Types" tab on all "/dashboard/event-types/*" routes
   if (href === "/dashboard/event-types" && pathname.startsWith("/dashboard/event-types")) {
+    return true;
+  }
+  // Highlight "Profile" for the root /dashboard route
+  if (href === "/dashboard" && pathname === "/dashboard") {
+    return true;
+  }
+  // Highlight "Booked Events" for any path under "/dashboard/booked-events/*"
+  if (href === "/dashboard/booked-events" && pathname.startsWith("/dashboard/booked-events")) {
     return true;
   }
   return pathname === href;
