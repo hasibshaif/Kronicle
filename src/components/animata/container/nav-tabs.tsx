@@ -11,7 +11,11 @@ interface TabProps {
   onClick: () => void;
 }
 
-export default function NavTabs({ tabs }: { tabs: { text: string; href: string }[] }) {
+export default function NavTabs({
+  tabs,
+}: {
+  tabs: { text: string; href: string }[];
+}) {
   const pathname = usePathname(); // Get the current path
   const router = useRouter();
 
@@ -22,30 +26,18 @@ export default function NavTabs({ tabs }: { tabs: { text: string; href: string }
           key={tab.text}
           text={tab.text}
           href={tab.href}
-          isActive={isActiveTab(tab.href, pathname)} // Updated logic for active tab
-          onClick={() => router.push(tab.href)}
+          isActive={isActiveTab(tab.href, pathname)} // Determines active state
+          onClick={() => router.push(tab.href)} // Navigation on click
         />
       ))}
     </div>
   );
 }
 
-// Function to determine if the current path matches or starts with the tab's href
 function isActiveTab(href: string, pathname: string) {
-  // Highlight "Event Types" tab on all "/dashboard/event-types/*" routes
-  if (href === "/dashboard/event-types" && pathname.startsWith("/dashboard/event-types")) {
-    return true;
-  }
-  // Highlight "Profile" for the root /dashboard route
-  if (href === "/dashboard" && pathname === "/dashboard") {
-    return true;
-  }
-  // Highlight "Booked Events" for any path under "/dashboard/booked-events/*"
-  if (href === "/dashboard/booked-events" && pathname.startsWith("/dashboard/booked-events")) {
-    return true;
-  }
-  return pathname === href;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
+
 
 const Tab = ({ text, isActive, onClick }: TabProps) => (
   <button

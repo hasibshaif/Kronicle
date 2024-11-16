@@ -8,8 +8,9 @@ import clsx from "clsx";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { IEventType } from "@/models/EventType";
-import { Check, Copy } from "lucide-react"; // Add Copy icon for the button
+import { Check, Copy } from "lucide-react";
 import EventTypeDelete from "./EventTypeDelete";
+import { weekDaysNames } from "@/lib/shared";
 
 const titlePlaceholders = [
   "Monday Mojo Mixer", "Project Power Hour", "Sprint to Win",
@@ -38,9 +39,7 @@ const descriptionPlaceholders = [
   "Plan and strategize our next big play!",
 ];
 
-const weekDaysNames:WeekdayName[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-export default function EventTypeForm({ doc }: { doc?: IEventType }) {
+export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType, username?:string }) {
   const [title, setTitle] = useState(doc?.title || "");
   const [description, setDescription] = useState(doc?.description || "");
   const [length, setLength] = useState(doc?.length || 30);
@@ -56,7 +55,10 @@ export default function EventTypeForm({ doc }: { doc?: IEventType }) {
     }
   );
   const [copied, setCopied] = useState(false); // Track if the URL is copied
+  const [titleRemaining, setTitleRemaining] = useState(50); // Max character limit
   const router = useRouter();
+
+  const MAX_TITLE_LENGTH = 50;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -72,6 +74,13 @@ export default function EventTypeForm({ doc }: { doc?: IEventType }) {
     if (response.data) {
       router.push("/dashboard/event-types");
       router.refresh();
+    }
+  }
+
+  function handleTitleChange(value: string) {
+    if (value.length <= MAX_TITLE_LENGTH) {
+      setTitle(value);
+      setTitleRemaining(MAX_TITLE_LENGTH - value.length);
     }
   }
 
@@ -97,7 +106,7 @@ export default function EventTypeForm({ doc }: { doc?: IEventType }) {
   }
 
   async function copyToClipboard() {
-    const url = `${process.env.NEXT_PUBLIC_URL}/username/${doc?.uri}`;
+    const url = `${process.env.NEXT_PUBLIC_URL}/${username}/${doc?.uri}`;
     await navigator.clipboard.writeText(url);
     setCopied(true); // Show Check icon
   
@@ -115,29 +124,31 @@ export default function EventTypeForm({ doc }: { doc?: IEventType }) {
       <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
         {/* Event Info Inputs */}
         <div className="flex flex-col gap-4">
-        {doc && (
-          <div
-            onClick={copyToClipboard} // Copy link when div is clicked
-            className="flex items-center gap-2 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition duration-200"
-          >
-            <p className="text-sm text-yellow-400">
-              {`${process.env.NEXT_PUBLIC_URL}/username/${doc.uri}`}
-            </p>
-            {/* Show Check icon momentarily after copying */}
-            {copied ? (
-              <Check size={16} className="text-green-400 transition duration-200" />
-            ) : (
-              <Copy size={16} className="text-yellow-400 transition duration-200" />
-            )}
-          </div>
-        )}
+          {doc && (
+            <div
+              onClick={copyToClipboard} // Copy link when div is clicked
+              className="flex items-center gap-2 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition duration-200"
+            >
+              <p className="text-sm text-yellow-400">
+                {`${process.env.NEXT_PUBLIC_URL}/${username}/${doc.uri}`}
+              </p>
+              {copied ? (
+                <Check size={16} className="text-green-400 transition duration-200" />
+              ) : (
+                <Copy size={16} className="text-yellow-400 transition duration-200" />
+              )}
+            </div>
+          )}
           <label className="text-yellow-400 font-semibold">TITLE</label>
           <PlaceholdersAndVanishInput
             value={title}
             placeholders={titlePlaceholders}
             className="w-full px-3 py-2 bg-gray-900 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => handleTitleChange(e.target.value)}
           />
+          <div className="text-right text-sm text-gray-400">
+            {titleRemaining} characters remaining
+          </div>
           <label className="text-yellow-400 font-semibold">DESCRIPTION</label>
           <PlaceholdersAndVanishInput
             value={description}
