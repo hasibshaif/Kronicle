@@ -6,18 +6,33 @@ import { ReactNode } from "react";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
     const email = await session().get("email");
+    console.log("Session email:", email); // Debugging log
+
     if (!email) {
+        console.error("User is not logged in or session data is missing");
         return (
             <p className="text-red-500 text-center">You must be logged in to access this page.</p>
         );
     }
 
-    await mongoose.connect(process.env.MONGODB_URI as string);
+    try {
+        await mongoose.connect(process.env.MONGODB_URI as string);
+        console.log("Database connected successfully");
+    } catch (dbError) {
+        console.error("Database connection error:", dbError);
+        return (
+            <p className="text-red-500 text-center">
+                An error occurred while connecting to the database. Please try again later.
+            </p>
+        );
+    }
+
     const profileDoc = await ProfileModel.findOne({ email });
+    console.log("Profile document:", profileDoc); // Debugging log
 
     return (
         <div>
-            <DashboardTabs username={profileDoc?.username || ''} />
+            <DashboardTabs username={profileDoc?.username || ""} />
             {children}
         </div>
     );

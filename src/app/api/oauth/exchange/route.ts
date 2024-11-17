@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
 
   if (!code) {
     console.error("No authorization code returned from Nylas");
-    return NextResponse.json("No authorization code returned from Nylas", { status: 400 });
-  }
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/login?error=no_auth_code`);
+  }  
 
   const codeExchangePayload = {
     clientSecret: nylasConfig.apiKey,
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     try {
       await session().set("grantId", grantId);
       await session().set("email", email);
-      console.log("Session updated successfully");
+      console.log("Session set with grantId and email:", { grantId, email });      
     } catch (sessionError) {
       console.error("Session management error:", sessionError);
       return NextResponse.json("Session Error", { status: 500 });
