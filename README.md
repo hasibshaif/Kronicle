@@ -17,7 +17,7 @@ To get started with Kronicle, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/hasibshaif/kronicle.git
+   git clone https://github.com/hasibshaif/Kronicle.git
    cd kronicle
    ```
 
