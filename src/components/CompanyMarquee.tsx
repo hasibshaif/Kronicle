@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 const logos = [
   {
     name: 'Vercel',
@@ -8,33 +9,22 @@ const logos = [
     url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715881475/nextjs_logo_dark_gfkf8m.svg',
   },
   {
-    name: 'Prime',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276558/logos/t2awrrfzdvmg1chnzyfr.svg',
+    name: 'Baruch',
+    url: '/logos/baruch-logo.png',
   },
   {
-    name: 'Trustpilot',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276558/logos/tkfspxqmjflfllbuqxsi.svg',
+    name: 'Accenture',
+    url: '/logos/accenture-logo.png',
   },
   {
-    name: 'Webflow',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276560/logos/nymiivu48d5lywhf9rpf.svg',
+    name: 'CUNY',
+    url: '/logos/cuny-logo.png',
   },
   {
-    name: 'Airbnb',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276558/logos/pmblusboe7vkw8vxdknx.svg',
+    name: 'Pulp',
+    url: '/logos/pulp-logo.png',
   },
-  {
-    name: 'Tina',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276560/logos/afqhiygywyphuou6xtxc.svg',
-  },
-  {
-    name: 'Stackoverflow',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276558/logos/ts1j4mkooxqmscgptafa.svg',
-  },
-  {
-    name: 'mistral',
-    url: 'https://res.cloudinary.com/dfhp33ufc/image/upload/v1715276558/logos/tyos2ayezryjskox3wzs.svg',
-  },
+
 ];
 
 export default function CompanyMarquee() {
@@ -58,12 +48,16 @@ export default function CompanyMarquee() {
                   className="flex shrink-0 animate-logo-cloud flex-row justify-around gap-6"
                 >
                   {logos.map((logo, key) => (
-                    <img
+                    <div
                       key={key}
-                      src={logo.url}
-                      className="h-10 w-28 px-2 filter brightness-0 invert"
-                      alt={`${logo.name}`}
-                    />
+                      className="flex items-center justify-center h-16 w-32 filter brightness-0 invert rounded-md p-2"
+                    >
+                      <img
+                        src={logo.url}
+                        className="h-full w-full object-contain"
+                        alt={`${logo.name}`}
+                      />
+                    </div>
                   ))}
                 </div>
               ))}

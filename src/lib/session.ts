@@ -7,7 +7,7 @@ type MySessionData = {
 }
 
 export const session = nextAppSession<MySessionData>({
-  name: 'cronus-session',
+  name: 'kronicle-session',
   secret: process.env.SECRET,
   cookie: {
     httpOnly: false,

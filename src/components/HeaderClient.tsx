@@ -28,9 +28,9 @@ export default function HeaderClient({ email }: HeaderClientProps) {
   return (
     <>
       <nav className="hidden lg:flex gap-4 text-md">
-        <Link href="/features" className="text-yellow-500 hover:text-yellow-400">Features</Link>
+        {/* <Link href="/features" className="text-yellow-500 hover:text-yellow-400">Features</Link>
         <Link href="/about" className="text-yellow-500 hover:text-yellow-400">About</Link>
-        <Link href="/pricing" className="text-yellow-500 hover:text-yellow-400">Pricing</Link>
+        <Link href="/pricing" className="text-yellow-500 hover:text-yellow-400">Pricing</Link> */}
       </nav>
 
       <div className="hidden lg:flex gap-4 items-center">
@@ -66,9 +66,9 @@ export default function HeaderClient({ email }: HeaderClientProps) {
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-black p-4 shadow-lg z-50 space-y-4">
           <nav className="flex flex-col gap-4 text-center">
-            <Link href="/features" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-500 hover:text-yellow-400">Features</Link>
+            {/* <Link href="/features" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-500 hover:text-yellow-400">Features</Link>
             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-500 hover:text-yellow-400">About</Link>
-            <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-500 hover:text-yellow-400">Pricing</Link>
+            <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-500 hover:text-yellow-400">Pricing</Link> */}
             {isLoggedOut ? (
               <>
                 <Link href="/api/auth" onClick={() => setIsMobileMenuOpen(false)} className="text-yellow-300 hover:text-yellow-400">Sign In</Link>

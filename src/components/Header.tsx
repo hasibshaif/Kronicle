@@ -12,14 +12,14 @@ interface HeaderProps {
 
 export default async function Header({ className }: HeaderProps) {
   const cookieStore = await cookies();
-  const email = await cookieStore.get("cronus-session");
+  const email = await cookieStore.get("kronicle-session");
 
   return (
     <header className={`relative flex items-center justify-between py-6 px-4 text-yellow-300 font-light ${className}`}>
       <div className="flex items-center gap-4">
         <Link href="/" className="text-yellow-500 font-bold text-3xl flex gap-2 items-center">
           <Hourglass size={24} />
-          Cronus
+          Kronicle
         </Link>
       </div>
 

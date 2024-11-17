@@ -2,8 +2,8 @@ import "./../globals.css";
 import MinimalHeader from "@/components/MinimalHeader";
 
 export const metadata = {
-  title: "Cronus - Booking",
-  description: "Schedule your events with Cronus",
+  title: "Kronicle - Booking",
+  description: "Schedule your events with Kronicle",
 };
 
 export default function RootLayout({

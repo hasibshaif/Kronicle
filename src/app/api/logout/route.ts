@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   try {
     // Manually clear the session cookie
     const cookieStore = cookies();
-    await cookieStore.delete("cronus-session");
+    await cookieStore.delete("kronicle-session");
 
     const url = new URL(request.url);
     url.pathname = "/";

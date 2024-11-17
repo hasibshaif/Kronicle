@@ -10,7 +10,7 @@ const funnelDisplay = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Cronus",
+  title: "Kronicle",
   description: "",
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${funnelDisplay.variable} antialiased`}>
         <main className="container">
-          <Header className="z-50" />
+          <Header className="z-[200]" />
           {children}
         </main>
       </body>
