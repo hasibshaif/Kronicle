@@ -1,20 +1,28 @@
-"use client"
+"use client";
 
 import AnimatedGradientText from "@/components/animata/text/animated-gradient-text";
 import { Vortex } from "@/components/ui/vortex";
 import Link from "next/link";
-import { Play } from "lucide-react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
-  async function reloadIfLoggedOut() {
-    if (location.href.includes('logged-out')) {
-      location.href = '/';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Simulated login status check
+  async function checkLoginStatus() {
+    try {
+      const response = await fetch("/api/auth/session"); // Example endpoint for session check
+      const data = await response.json();
+      if (data?.email) {
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Failed to check login status:", error);
     }
   }
-  
+
   useEffect(() => {
-    reloadIfLoggedOut();
+    checkLoginStatus();
   }, []);
 
   return (
@@ -23,7 +31,7 @@ export default function Hero() {
       <Vortex
         backgroundColor="transparent"
         className="text-center flex flex-col items-center justify-center w-full h-[400px]"
-        containerClassName="relative w-full h-full z-0" // Removed pointer-events-none
+        containerClassName="relative w-full h-full z-0"
         rangeHue={0}
       >
         <AnimatedGradientText className="text-5xl font-bold mb-5 pb-2 leading-tight">
@@ -33,15 +41,11 @@ export default function Hero() {
           Effortless scheduling that keeps everyone in sync, wherever they are.
         </p>
         <div className="mt-4 flex gap-6 justify-center items-center">
-          <Link href={"/"} className="bg-orange-600 py-2 px-4 rounded-full">
-            Get Started
-          </Link>
           <Link
-            href={"/"}
-            className="flex items-center gap-1 border border-yellow-300 rounded-full py-2 px-4"
+            href={isLoggedIn ? "/dashboard" : "/"}
+            className="bg-orange-600 py-2 px-4 rounded-full"
           >
-            <Play size={18} />
-            Watch
+            {isLoggedIn ? "Dashboard" : "Get Started"}
           </Link>
         </div>
       </Vortex>

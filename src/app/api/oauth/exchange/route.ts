@@ -39,14 +39,13 @@ console.log("Authorization code received:", code);
       return NextResponse.json("Nylas Exchange Failed", { status: 500 });
     }
 
-    // Connect to MongoDB
     try {
       await mongoose.connect(process.env.MONGODB_URI as string);
       console.log("Database connected successfully");
-    } catch (dbError) {
+  } catch (dbError) {
       console.error("Database connection error:", dbError);
-      return NextResponse.json("Database Connection Error", { status: 500 });
-    }
+  }
+  
 
     // Update or create user profile
     try {

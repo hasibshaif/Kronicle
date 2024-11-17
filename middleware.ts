@@ -4,14 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function middleware(req: NextRequest) {
   const sessionHandler = session();
-
-  // Example: Access or manipulate session data (if needed)
-  const grantId = await sessionHandler.get("grantId");
-  console.log("Session Grant ID:", grantId);
-
-  // Proceed to the next middleware or route handler
+  try {
+      const grantId = await sessionHandler.get("grantId");
+      console.log("Middleware session grantId:", grantId);
+  } catch (error) {
+      console.error("Middleware session error:", error);
+  }
   return NextResponse.next();
 }
+
 
 // Specify paths where the middleware should run
 export const config = {
