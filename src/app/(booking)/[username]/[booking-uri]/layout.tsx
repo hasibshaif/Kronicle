@@ -1,37 +1,33 @@
-import { EventTypeModel, IEventType } from "@/models/EventType";
-import { ProfileModel, IProfile } from "@/models/Profile";
+import { EventTypeModel } from "@/models/EventType";
+import { ProfileModel } from "@/models/Profile";
 import { Clock, Info } from "lucide-react";
 import mongoose from "mongoose";
 import { ReactNode } from "react";
 
 type LayoutProps = {
   children: ReactNode;
-  params: {
+  params: Promise<{
     username: string;
     "booking-uri": string;
-  };
+  }>;
 };
 
 export default async function BookingBoxLayout(props: LayoutProps) {
+  const resolvedParams = await props.params;
+
   await mongoose.connect(process.env.MONGODB_URI as string);
-
-  // Fetch the profile document using the username from params
-  const profileDoc = await ProfileModel.findOne<IProfile>({
-    username: props.params.username,
+  const profileDoc = await ProfileModel.findOne({
+    username: resolvedParams.username,
   });
-
   if (!profileDoc) {
-    return <div>404 - Profile Not Found</div>;
+    return "404";
   }
-
-  // Fetch the event type document using the email from profileDoc and URI from params
-  const etDoc = await EventTypeModel.findOne<IEventType>({
+  const etDoc = await EventTypeModel.findOne({
     email: profileDoc.email,
-    uri: props.params["booking-uri"],
+    uri: resolvedParams["booking-uri"],
   });
-
   if (!etDoc) {
-    return <div>404 - Event Type Not Found</div>;
+    return "404";
   }
 
   return (
