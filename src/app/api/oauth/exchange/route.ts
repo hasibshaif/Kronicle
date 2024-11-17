@@ -3,6 +3,7 @@ import { nylasConfig, nylas } from "@/lib/nylasConfig";
 import { session } from "@/lib/session";
 import { ProfileModel } from "@/models/Profile";
 import mongoose from "mongoose";
+import { redirect } from "next/navigation";
 
 export async function GET(req: NextRequest) {
   console.log("Received callback from Nylas");
@@ -37,8 +38,8 @@ export async function GET(req: NextRequest) {
 
     await session().set("grantId", grantId);
     await session().set("email", email);
-
-    return NextResponse.redirect("/");
+    redirect("/");
+    
   } catch (error) {
     console.error("Error during Nylas OAuth exchange:", error);
     return NextResponse.json("Internal Server Error", { status: 500 });
