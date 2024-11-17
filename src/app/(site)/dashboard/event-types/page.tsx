@@ -7,7 +7,19 @@ import { ProfileModel } from "@/models/Profile";
 
 export default async function EventTypesPage() {
   await mongoose.connect(process.env.MONGODB_URI as string);
-  const email = await session().get('email');
+
+  // Explicitly retrieve cookies and ensure they're handled correctly
+  const sessionInstance = await session();
+  const email = await sessionInstance.get("email");
+
+  if (!email) {
+    return (
+      <p className="text-red-500 text-center">
+        You must be logged in to access this page.
+      </p>
+    );
+  }
+
   const eventTypes = await EventTypeModel.find({ email });
   const profile = await ProfileModel.findOne({ email });
 
@@ -19,7 +31,7 @@ export default async function EventTypesPage() {
             <div>
               <span>{e.title}</span>
               <span className="text-gray-500 ml-4 text-sm">
-                {process.env.NEXT_PUBLIC_URL}/{profile.username}/{e.uri}
+                {process.env.NEXT_PUBLIC_URL}/{profile?.username}/{e.uri}
               </span>
             </div>
             <Link
