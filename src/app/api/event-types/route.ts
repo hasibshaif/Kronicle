@@ -1,6 +1,4 @@
-// src/pages/api/event-types.ts
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { EventTypeModel } from "@/models/EventType";
 import mongoose from "mongoose";
 import { session } from "@/lib/session";
@@ -10,56 +8,64 @@ function uriFromTitle(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+// Connect to MongoDB
+async function connectToDatabase() {
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) {
-    return res.status(500).json({ error: "MONGODB_URI environment variable is not defined." });
+    throw new Error("MONGODB_URI environment variable is not defined.");
   }
   await mongoose.connect(mongoUri);
+}
 
-  const email = req.headers["x-user-email"] as string; // Or handle email differently if needed
+// GET Method
+export async function GET(req: Request) {
+  await connectToDatabase();
+  const email = req.headers.get("x-user-email") as string; // Modify as needed to fetch the email
   const eventTypes = await EventTypeModel.find({ email });
-
-  res.status(200).json(eventTypes);
+  return NextResponse.json(eventTypes);
 }
 
-export async function POST(req: NextRequest) {
-  await mongoose.connect(process.env.MONGODB_URI as string);
+// POST Method
+export async function POST(req: Request) {
+  await connectToDatabase();
   const data = await req.json();
-  console.log("Received POST data:", data); // Add this for debugging
 
-  const email = await session().get('email');
+  const email = await session().get("email");
   if (email) {
-    // Generate URI from title if not already set
-    data.uri = uriFromTitle(data.title || '');
+    data.uri = uriFromTitle(data.title || "");
     const eventTypeDoc = await EventTypeModel.create({ email, ...data });
-    revalidatePath('/dashboard/event-types', 'layout');
-    return Response.json(eventTypeDoc);
+    revalidatePath("/dashboard/event-types");
+    return NextResponse.json(eventTypeDoc);
   }
-  return Response.json(false);
+  return NextResponse.json(false, { status: 401 });
 }
 
-export async function PUT(req: NextRequest) {
-  await mongoose.connect(process.env.MONGODB_URI as string);
+// PUT Method
+export async function PUT(req: Request) {
+  await connectToDatabase();
   const data = await req.json();
-  data.uri = uriFromTitle(data.title); // Generate URI from title
-  const email = await session().get('email');
+  data.uri = uriFromTitle(data.title);
+
+  const email = await session().get("email");
   const id = data.id;
   if (email && id) {
-    const eventTypeDoc = await EventTypeModel.updateOne(
-      { email, _id: id },
-      data,
-    );
-    revalidatePath('/dashboard/event-types', 'layout');
-    return Response.json(eventTypeDoc);
+    const eventTypeDoc = await EventTypeModel.updateOne({ email, _id: id }, data);
+    revalidatePath("/dashboard/event-types");
+    return NextResponse.json(eventTypeDoc);
   }
-  return Response.json(false);
+  return NextResponse.json(false, { status: 401 });
 }
 
-export async function DELETE(req: NextRequest) {
+// DELETE Method
+export async function DELETE(req: Request) {
   const url = new URL(req.url);
-  const id = url.searchParams.get('id');
-  await mongoose.connect(process.env.MONGODB_URI as string);
-  await EventTypeModel.deleteOne({_id: id})
-  return Response.json(true);
+  const id = url.searchParams.get("id");
+  await connectToDatabase();
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+
+  await EventTypeModel.deleteOne({ _id: id });
+  return NextResponse.json(true);
 }
