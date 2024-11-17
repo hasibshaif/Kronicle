@@ -44,6 +44,7 @@ export default function BookingFormPage() {
     try {
       await axios.post("/api/bookings", data);
       setConfirmed(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setErrorMessage("Something went wrong. Please try again.");
     }
