@@ -26,7 +26,7 @@ export default function NavTabs({
           key={tab.text}
           text={tab.text}
           href={tab.href}
-          isActive={isActiveTab(tab.href, pathname)} // Determines active state
+          isActive={isActiveTab(tab.href, pathname)} // Updated logic
           onClick={() => router.push(tab.href)} // Navigation on click
         />
       ))}
@@ -35,7 +35,15 @@ export default function NavTabs({
 }
 
 function isActiveTab(href: string, pathname: string) {
-  return pathname === href || pathname.startsWith(`${href}/`);
+  const tabPaths: Record<string, (pathname: string) => boolean> = {
+    "/dashboard": (path) => path === "/dashboard",
+    "/dashboard/booked-events": (path) => path.startsWith("/dashboard/booked-events"),
+    "/dashboard/event-types": (path) =>
+      path.startsWith("/dashboard/event-types") && !path.startsWith("/dashboard/booked-events"),
+  };
+
+  const isMatch = tabPaths[href]?.(pathname) ?? false;
+  return isMatch;
 }
 
 
