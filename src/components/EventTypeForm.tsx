@@ -13,36 +13,55 @@ import EventTypeDelete from "./EventTypeDelete";
 import { weekDaysNames } from "@/lib/shared";
 
 const titlePlaceholders = [
-  "Monday Momentum", "Project Power-Up", "Weekly Win Session",
-  "Idea Generator", "Coffee & Collaboration", "Big Picture Meeting",
-  "Retro Reset", "Client Connection Call", "Marketing Mastermind",
-  "Innovation Lab", "Team Huddle", "Sync & Share",
-  "Brain Boost Session", "Creative Jam", "Game Plan Gathering",
-  "Idea Sprint", "All Hands Check-In", "Progress Pulse",
-  "Lightning Sync", "Future Planning Party"
+  "Monday Momentum",
+  "Project Power-Up",
+  "Weekly Win Session",
+  "Idea Generator",
+  "Coffee & Collaboration",
+  "Big Picture Meeting",
+  "Retro Reset",
+  "Client Connection Call",
+  "Marketing Mastermind",
+  "Innovation Lab",
+  "Team Huddle",
+  "Sync & Share",
+  "Brain Boost Session",
+  "Creative Jam",
+  "Game Plan Gathering",
+  "Idea Sprint",
+  "All Hands Check-In",
+  "Progress Pulse",
+  "Lightning Sync",
+  "Future Planning Party",
 ];
 
 const descriptionPlaceholders = [
-  "Kickstart the week with fresh ideas.", 
-  "Find solutions and map out next steps.", 
+  "Kickstart the week with fresh ideas.",
+  "Find solutions and map out next steps.",
   "Brainstorm big ideas and creative fixes.",
-  "Recharge and realign with the team.", 
-  "Get everyone on the same wavelength.", 
-  "Catch up and set goals for the week ahead.", 
-  "Reflect, improve, and share some laughs.", 
-  "Keep clients excited about our progress.", 
-  "Bring bold ideas to life for the next campaign.", 
+  "Recharge and realign with the team.",
+  "Get everyone on the same wavelength.",
+  "Catch up and set goals for the week ahead.",
+  "Reflect, improve, and share some laughs.",
+  "Keep clients excited about our progress.",
+  "Bring bold ideas to life for the next campaign.",
   "Shake things up and plan the future.",
-  "Boost collaboration and team energy.", 
-  "Set the stage for big wins.", 
-  "Unleash creativity and explore new options.", 
-  "Recap, reset, and re-energize.", 
-  "Strategize and map out the next big move."
+  "Boost collaboration and team energy.",
+  "Set the stage for big wins.",
+  "Unleash creativity and explore new options.",
+  "Recap, reset, and re-energize.",
+  "Strategize and map out the next big move.",
 ];
 
 const MAX_TITLE_LENGTH = 50;
 
-export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType, username?: string }) {
+export default function EventTypeForm({
+  doc,
+  username = "",
+}: {
+  doc?: IEventType;
+  username?: string;
+}) {
   const [title, setTitle] = useState(doc?.title || "");
   const [description, setDescription] = useState(doc?.description || "");
   const [length, setLength] = useState(doc?.length || 30);
@@ -144,20 +163,29 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
       {errors.title && (
         <div className="text-red-400 text-center mb-4">{errors.title}</div>
       )}
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
+      <form
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col gap-4">
           {doc && (
             <div
               onClick={copyToClipboard}
               className="flex items-center gap-2 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition duration-200"
             >
-              <p className="text-sm text-yellow-400">
+              <p className="text-sm text-yellow-400 break-all">
                 {`${process.env.NEXT_PUBLIC_URL}/${username}/${doc.uri}`}
               </p>
               {copied ? (
-                <Check size={16} className="text-green-400 transition duration-200" />
+                <Check
+                  size={16}
+                  className="text-green-400 transition duration-200"
+                />
               ) : (
-                <Copy size={16} className="text-yellow-400 transition duration-200" />
+                <Copy
+                  size={16}
+                  className="text-yellow-400 transition duration-200"
+                />
               )}
             </div>
           )}
@@ -180,7 +208,9 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
             as="textarea"
             rows={4}
           />
-          <label className="text-yellow-400 font-semibold">EVENT LENGTH (minutes)</label>
+          <label className="text-yellow-400 font-semibold">
+            EVENT LENGTH (minutes)
+          </label>
           <input
             type="number"
             placeholder="30"
@@ -189,32 +219,41 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
           />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {weekDaysNames.map((day) => (
             <div
               key={day}
-              className="flex flex-col sm:flex-row items-center justify-between gap-8 p-3 bg-gray-900 border border-gray-700 rounded-lg shadow-sm"
+              className="flex flex-wrap gap-4 items-center justify-between p-3 bg-gray-900 border border-gray-700 rounded-lg shadow-sm"
             >
-              <label className="flex gap-2 uppercase">
+              <label className="flex gap-2 uppercase items-center">
                 <input
                   type="checkbox"
                   value={day}
                   checked={bookingTimes[day]?.active || false}
-                  onChange={(e) => handleBookingTimeChange(day, e.target.checked, "active")}
+                  onChange={(e) =>
+                    handleBookingTimeChange(day, e.target.checked, "active")
+                  }
                 />
-                <span className="text-yellow-400 font-semibold w-20">{day}</span>
+                <span className="text-yellow-400 font-semibold">{day}</span>
               </label>
-              <div className={clsx("flex items-center gap-3", bookingTimes[day]?.active ? "" : "opacity-40")}>
-                <span className="text-gray-400">FROM</span>
-                <div className="select-container">
+              <div
+                className={clsx(
+                  "flex flex-wrap gap-3 items-center justify-between w-full md:w-auto",
+                  bookingTimes[day]?.active ? "" : "opacity-40"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400">FROM</span>
                   <TimeSelect
                     value={bookingTimes[day]?.from || "00:00"}
-                    onChange={(val) => handleBookingTimeChange(day, val, "from")}
+                    onChange={(val) =>
+                      handleBookingTimeChange(day, val, "from")
+                    }
                     step={30}
                   />
                 </div>
-                <span className="text-gray-400">TO</span>
-                <div className="select-container">
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400">TO</span>
                   <TimeSelect
                     value={bookingTimes[day]?.to || "00:00"}
                     onChange={(val) => handleBookingTimeChange(day, val, "to")}
@@ -222,14 +261,19 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
                   />
                 </div>
               </div>
-              {errors[day] && <div className="text-red-400 text-sm mt-2">{errors[day]}</div>}
+              {errors[day] && (
+                <div className="text-red-400 text-sm mt-2">{errors[day]}</div>
+              )}
             </div>
           ))}
         </div>
 
-        <div className="col-span-2 flex justify-center gap-4 mt-4">
+        <div className="col-span-1 md:col-span-2 flex flex-col gap-4 mt-4 items-center">
           {doc && <EventTypeDelete id={doc._id as string} />}
-          <button type="submit" className="button-gradient flex items-center gap-2">
+          <button
+            type="submit"
+            className="button-gradient flex items-center gap-2"
+          >
             <Check size={16} />
             SAVE EVENT
           </button>
