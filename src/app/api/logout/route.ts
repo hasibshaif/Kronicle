@@ -1,18 +1,18 @@
-// src/app/api/logout/route.ts
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
-    // Manually clear the session cookie
-    const cookieStore = cookies();
-    await cookieStore.delete("kronicle-session");
+    // Create a response object to clear the cookie
+    const response = NextResponse.redirect("/");
+    
+    // Set the "kronicle-session" cookie to expire
+    response.cookies.set("kronicle-session", "", { path: "/", maxAge: 0 });
 
     const url = new URL(request.url);
-    url.pathname = "/";
     url.searchParams.set("logged-out", "1");
+    response.headers.set("Location", url.toString());
 
-    return NextResponse.redirect(url.toString());
+    return response;
   } catch (error) {
     console.error("Error in logout route:", error);
     return NextResponse.json({ error: "Failed to log out" }, { status: 500 });
