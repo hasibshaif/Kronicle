@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kronicle
+
+Kronicle is a full-stack, user-friendly, and mobile-responsive scheduling application inspired by Calendly. Built with modern web technologies, Kronicle offers seamless integration with Google Calendar and provides a rich user experience with its intuitive design and smooth animations.
+
+## Features
+
+- **User-Friendly Interface**: Kronicle is designed to be intuitive and easy to use, ensuring a smooth scheduling experience for all users.
+- **Mobile Responsive**: The application is fully responsive, providing a consistent experience across all devices.
+- **Full-Stack Integration**: Built with React.js and Next.js, Kronicle offers a robust full-stack solution.
+- **Frontend Libraries**: Utilizes Tailwind CSS for styling and Framer Motion for animations, ensuring a visually appealing and dynamic user interface.
+- **Backend Integration**: Integrated with Nylas for calendar synchronization and MongoDB for data storage.
+- **Google Calendar Sync**: Seamlessly syncs with Google Calendar to manage and display events.
 
 ## Getting Started
 
-First, run the development server:
+To get started with Kronicle, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/hasibshaif/kronicle.git
+   cd kronicle
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set Up Environment Variables**:
+   Create a `.env` file in the root directory and add the necessary environment variables for MongoDB, Nylas, and Google Calendar integration.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project, check out the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
+- [React.js Documentation](https://reactjs.org/docs/getting-started.html) - Learn about React.js.
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS.
+- [Framer Motion Documentation](https://www.framer.com/motion/) - Learn about Framer Motion.
+- [Nylas API Documentation](https://developer.nylas.com/docs/) - Learn about Nylas API.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

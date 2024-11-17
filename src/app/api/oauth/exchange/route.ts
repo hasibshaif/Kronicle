@@ -69,10 +69,10 @@ console.log("Authorization code received:", code);
       await session().set("grantId", grantId);
       await session().set("email", email);
       console.log("Session set successfully");
-    } catch (error) {
+  } catch (error) {
       console.error("Error setting session:", error);
-    }
-
+  }
+  
     // Redirect after successful flow
     console.log("Redirecting to homepage");
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/`);
