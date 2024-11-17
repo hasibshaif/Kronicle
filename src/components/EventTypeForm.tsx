@@ -13,33 +13,36 @@ import EventTypeDelete from "./EventTypeDelete";
 import { weekDaysNames } from "@/lib/shared";
 
 const titlePlaceholders = [
-  "Monday Mojo Mixer", "Project Power Hour", "Sprint to Win",
-  "Dreamstorm", "Coffee & Concepts", "Big Brain Bash",
-  "Retrospective Rendezvous", "Client Connection", "Marketing Magic",
-  "Innovation Jam Session", "Wizarding Workshop", "Epic Sync-Up",
-  "Team Therapy", "Creative Chaos", "Strategy Soiree",
-  "Brain Blast Bonanza", "All Ideas Welcome", "Retrograde Review",
-  "Lightning Round", "Future Forecast"
-];
-const descriptionPlaceholders = [
-  "Unlock fresh ideas and next steps!", 
-  "Uncover insights and pave the path forward.", 
-  "Bounce big ideas off each other and brainstorm.",
-  "Recharge and review progress with the team.", 
-  "Set our goals on the same page, together!", 
-  "Get everyone in the loop with the latest updates.", 
-  "Reflect, improve, and laugh along the way.", 
-  "Keep clients thrilled with our progress.", 
-  "Unleash our creativity for the next big campaign.", 
-  "Cook up future ideas and shake things up!",
-  "Master the art of collaboration!", 
-  "Gather the squad for a creative reset.", 
-  "Find new sparks for tomorrow's solutions!", 
-  "Recap, relax, and re-energize.", 
-  "Plan and strategize our next big play!",
+  "Monday Momentum", "Project Power-Up", "Weekly Win Session",
+  "Idea Generator", "Coffee & Collaboration", "Big Picture Meeting",
+  "Retro Reset", "Client Connection Call", "Marketing Mastermind",
+  "Innovation Lab", "Team Huddle", "Sync & Share",
+  "Brain Boost Session", "Creative Jam", "Game Plan Gathering",
+  "Idea Sprint", "All Hands Check-In", "Progress Pulse",
+  "Lightning Sync", "Future Planning Party"
 ];
 
-export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType, username?:string }) {
+const descriptionPlaceholders = [
+  "Kickstart the week with fresh ideas.", 
+  "Find solutions and map out next steps.", 
+  "Brainstorm big ideas and creative fixes.",
+  "Recharge and realign with the team.", 
+  "Get everyone on the same wavelength.", 
+  "Catch up and set goals for the week ahead.", 
+  "Reflect, improve, and share some laughs.", 
+  "Keep clients excited about our progress.", 
+  "Bring bold ideas to life for the next campaign.", 
+  "Shake things up and plan the future.",
+  "Boost collaboration and team energy.", 
+  "Set the stage for big wins.", 
+  "Unleash creativity and explore new options.", 
+  "Recap, reset, and re-energize.", 
+  "Strategize and map out the next big move."
+];
+
+const MAX_TITLE_LENGTH = 50;
+
+export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType, username?: string }) {
   const [title, setTitle] = useState(doc?.title || "");
   const [description, setDescription] = useState(doc?.description || "");
   const [length, setLength] = useState(doc?.length || 30);
@@ -54,22 +57,39 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
       Sunday: { from: "00:00", to: "00:00", active: false },
     }
   );
-  const [copied, setCopied] = useState(false); // Track if the URL is copied
-  const [titleRemaining, setTitleRemaining] = useState(50); // Max character limit
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [copied, setCopied] = useState(false);
+  const [titleRemaining, setTitleRemaining] = useState(MAX_TITLE_LENGTH);
   const router = useRouter();
 
-  const MAX_TITLE_LENGTH = 50;
+  function validateForm() {
+    const newErrors: Record<string, string> = {};
+    if (!title.trim()) {
+      newErrors.title = "Title is required.";
+    }
+
+    for (const day of weekDaysNames) {
+      const { from, to, active } = bookingTimes[day] || {};
+      if (active && from && to) {
+        const fromTime = parseInt(from.replace(":", ""), 10);
+        const toTime = parseInt(to.replace(":", ""), 10);
+        if (fromTime >= toTime) {
+          newErrors[day] = "Start time must be before end time.";
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (!validateForm()) return;
+
     const id = doc?._id;
     const request = id ? axios.put : axios.post;
-    const data = {
-      title,
-      description,
-      length,
-      bookingTimes,
-    };
+    const data = { title, description, length, bookingTimes };
     const response = await request("/api/event-types", { ...data, id });
     if (response.data) {
       router.push("/dashboard/event-types");
@@ -103,14 +123,14 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
 
       return newBookingTimes;
     });
+    setErrors((prev) => ({ ...prev, [day]: "" }));
   }
 
   async function copyToClipboard() {
     const url = `${process.env.NEXT_PUBLIC_URL}/${username}/${doc?.uri}`;
     await navigator.clipboard.writeText(url);
-    setCopied(true); // Show Check icon
-  
-    // Revert back to Copy icon after 2 seconds
+    setCopied(true);
+
     setTimeout(() => {
       setCopied(false);
     }, 2000);
@@ -121,12 +141,14 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
       <h2 className="text-center text-2xl text-white font-semibold mb-6">
         CREATE NEW EVENT TYPE
       </h2>
+      {errors.title && (
+        <div className="text-red-400 text-center mb-4">{errors.title}</div>
+      )}
       <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
-        {/* Event Info Inputs */}
         <div className="flex flex-col gap-4">
           {doc && (
             <div
-              onClick={copyToClipboard} // Copy link when div is clicked
+              onClick={copyToClipboard}
               className="flex items-center gap-2 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition duration-200"
             >
               <p className="text-sm text-yellow-400">
@@ -167,7 +189,6 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
           />
         </div>
 
-        {/* Day-Specific Availability */}
         <div className="flex flex-col gap-3">
           {weekDaysNames.map((day) => (
             <div
@@ -201,11 +222,11 @@ export default function EventTypeForm({ doc, username = '' }: { doc?: IEventType
                   />
                 </div>
               </div>
+              {errors[day] && <div className="text-red-400 text-sm mt-2">{errors[day]}</div>}
             </div>
           ))}
         </div>
 
-        {/* Save Button */}
         <div className="col-span-2 flex justify-center gap-4 mt-4">
           {doc && <EventTypeDelete id={doc._id as string} />}
           <button type="submit" className="button-gradient flex items-center gap-2">

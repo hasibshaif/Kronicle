@@ -2,6 +2,8 @@ import { NextApiRequest } from "next";
 import { nylasConfig, nylas } from "@/lib/nylasConfig";
 import { session } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { ProfileModel } from "@/models/Profile";
+import mongoose from "mongoose";
 
 export async function GET(req: NextApiRequest) {
     console.log("Received callback from Nylas");
@@ -19,13 +21,23 @@ export async function GET(req: NextApiRequest) {
 
     const codeExchangePayload = {
         clientSecret: nylasConfig.apiKey,
-        clientId: nylasConfig.clientId,
+        clientId: nylasConfig.clientId as string,
         redirectUri: nylasConfig.callbackUri,
         code,
     };
   
     const response = await nylas.auth.exchangeCodeForToken(codeExchangePayload)
     const { grantId, email } = response;
+
+    await mongoose.connect(process.env.MONGODB_URI as string);
+
+    const profileDoc = await ProfileModel.findOne({email});
+    if (profileDoc) {
+        profileDoc.grantId = grantId;
+        await profileDoc.save();
+    } else {
+        await ProfileModel.create({email, grantId});
+    }
 
     await session().set('grantId', grantId);
     await session().set('email', email);
