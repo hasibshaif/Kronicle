@@ -68,10 +68,9 @@ console.log("Authorization code received:", code);
     try {
       await session().set("grantId", grantId);
       await session().set("email", email);
-      console.log("Session set with grantId and email:", { grantId, email });      
-    } catch (sessionError) {
-      console.error("Session management error:", sessionError);
-      return NextResponse.json("Session Error", { status: 500 });
+      console.log("Session set successfully");
+    } catch (error) {
+      console.error("Error setting session:", error);
     }
 
     // Redirect after successful flow
