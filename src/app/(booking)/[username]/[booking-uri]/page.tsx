@@ -4,23 +4,25 @@ import { ProfileModel } from "@/models/Profile";
 import mongoose from "mongoose";
 
 type PageProps = {
-    params: {
+    params: Promise<{
       username: string;
       "booking-uri": string;
-    };
+    }>;
   };  
 
   export default async function BookingPage(props: PageProps) {
+    const resolvedParams = await props.params;
+  
     await mongoose.connect(process.env.MONGODB_URI as string);
     const profileDoc = await ProfileModel.findOne({
-      username: props.params.username,
+      username: resolvedParams.username,
     });
     if (!profileDoc) {
       return '404';
     }
     const etDoc = await EventTypeModel.findOne({
       email: profileDoc.email,
-      uri: props.params['booking-uri'],
+      uri: resolvedParams['booking-uri'],
     });
     if (!etDoc) {
       return '404';
@@ -28,11 +30,11 @@ type PageProps = {
     return (
       <div className="bg-gray-800 grow">
         <TimePicker 
-          username={props.params.username}
+          username={resolvedParams.username}
           meetingUri={etDoc.uri}
           length={etDoc.length} 
           bookingTimes={JSON.parse(JSON.stringify(etDoc.bookingTimes))} 
         />
       </div>
     );      
-  }  
+  }
