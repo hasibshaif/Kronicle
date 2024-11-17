@@ -74,8 +74,7 @@ export async function GET(req: NextRequest) {
 
     // Redirect after successful flow
     console.log("Redirecting to homepage");
-    return NextResponse.redirect("/");
-
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/`);
   } catch (error) {
     console.error("Error during Nylas OAuth exchange:", error);
     return NextResponse.json("Internal Server Error", { status: 500 });
