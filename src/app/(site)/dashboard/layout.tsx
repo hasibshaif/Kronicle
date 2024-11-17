@@ -6,10 +6,13 @@ import { ReactNode } from "react";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
     const email = await session().get("email");
+    const grantId = await session().get("grantId");
+
+    console.log("Session grantId:", grantId); // Debugging log
     console.log("Session email:", email); // Debugging log
 
     if (!email) {
-        console.error("User is not logged in or session data is missing");
+        console.error("Session missing or email not set.");
         return (
             <p className="text-red-500 text-center">You must be logged in to access this page.</p>
         );

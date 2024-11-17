@@ -8,13 +8,14 @@ export async function GET(req: NextRequest) {
   console.log("Received callback from Nylas");
 
   const url = new URL(req.url);
+  console.log("Full callback URL:", url.toString());
   const code = url.searchParams.get("code");
   console.log("Authorization Code:", code);
 
   if (!code) {
     console.error("No authorization code returned from Nylas");
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/login?error=no_auth_code`);
-  }  
+    return NextResponse.json("No authorization code returned from Nylas", { status: 400 });
+  }
 
   const codeExchangePayload = {
     clientSecret: nylasConfig.apiKey,
