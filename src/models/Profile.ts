@@ -1,6 +1,6 @@
 import mongoose, { model, models, Schema } from "mongoose";
 
-interface IProfile extends mongoose.Document{
+export interface IProfile extends mongoose.Document{
     email: string;
     username: string;
     grantId: string;
