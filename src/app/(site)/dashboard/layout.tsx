@@ -11,12 +11,12 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     console.log("Session grantId:", grantId); // Debugging log
     console.log("Session email:", email); // Debugging log
 
-    if (!email) {
-        console.error("Session missing or email not set.");
-        return (
-            <p className="text-red-500 text-center">You must be logged in to access this page.</p>
-        );
-    }
+    // if (!email) {
+    //     console.error("Session missing or email not set.");
+    //     return (
+    //         <p className="text-red-500 text-center">You must be logged in to access this page.</p>
+    //     );
+    // }
 
     try {
         await mongoose.connect(process.env.MONGODB_URI as string);

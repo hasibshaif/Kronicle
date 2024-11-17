@@ -13,9 +13,10 @@ export async function GET(req: NextRequest) {
   console.log("Authorization Code:", code);
 
   if (!code) {
-    console.error("No authorization code returned from Nylas");
-    return NextResponse.json("No authorization code returned from Nylas", { status: 400 });
-  }
+    console.error("No code found in the callback URL:", url.toString());
+    return NextResponse.json({ error: "No authorization code found" }, { status: 400 });
+}
+console.log("Authorization code received:", code);
 
   const codeExchangePayload = {
     clientSecret: nylasConfig.apiKey,
